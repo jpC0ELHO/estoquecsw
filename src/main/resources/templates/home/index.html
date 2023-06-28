@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coelho Street Working</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+    <h1>Deashboard</h1>
+</main>
+<div class="container">
+    <h1>Painel de Vendas</h1>
+
+    <div class="card">
+        <h2>Total de Vendas</h2>
+        <p>R$ <input type="number" id="totalSales"  step="0.01"></p>
+    </div>
+
+    <div class="card">
+        <h2>Vendas por Categoria</h2>
+        <p>Categoria A: R$ <input type="number" id="categoryASales"  step="0.01"></p>
+        <p>Categoria B: R$ <input type="number" id="categoryBSales"  step="0.01"></p>
+        <p>Categoria C: R$ <input type="number" id="categoryCSales"  step="0.01"></p>
+    </div>
+
+    <div class="card">
+        <h2>Vendas por Produto</h2>
+        <p>Produto A: R$ <input type="number" id="productASales" value="0" step="1"></p>
+        <p>Produto B: R$ <input type="number" id="productBSales" value="0" step="1"></p>
+        <p>Produto C: R$ <input type="number" id="productCSales" value="0" step="1"></p>
+    </div>
+
+    <div class="card total">
+        <h2>Total de Clientes</h2>
+        <p><input type="number" id="totalCustomers"></p>
+    </div>
+</div>
+
+<script>
+    function updateValues() {
+      // Atualizar os valores
+      var totalSales = parseFloat(document.getElementById("totalSales").value);
+      var categoryASales = parseFloat(document.getElementById("categoryASales").value);
+      var categoryBSales = parseFloat(document.getElementById("categoryBSales").value);
+      var categoryCSales = parseFloat(document.getElementById("categoryCSales").value);
+      var productASales = parseFloat(document.getElementById("productASales").value);
+      var productBSales = parseFloat(document.getElementById("productBSales").value);
+      var productCSales = parseFloat(document.getElementById("productCSales").value);
+      var totalCustomers = parseInt(document.getElementById("totalCustomers").value);
+
+      // Atualizar os elementos HTML com os novos valores
+      document.getElementById("totalSales").innerText = "R$ " + totalSales.toFixed(2);
+      document.getElementById("categoryASales").innerText = "R$ " + categoryASales.toFixed(2);
+      document.getElementById("categoryBSales").innerText = "R$ " + categoryBSales.toFixed(2);
+      document.getElementById("categoryCSales").innerText = "R$ " + categoryCSales.toFixed(2);
+      document.getElementById("productASales").innerText = "R$ " + productASales.toFixed(2);
+      document.getElementById("productBSales").innerText = "R$ " + productBSales.toFixed(2);
+      document.getElementById("productCSales").innerText = "R$ " + productCSales.toFixed(2);
+      document.getElementById("totalCustomers").innerText = totalCustomers;
+    }
+
+    // Adicionar evento de mudança aos campos de entrada
+    var inputs = document.querySelectorAll("input[type='number']");
+    inputs.forEach(function(input) {
+      input.addEventListener("change", updateValues);
+    });
+
+    // Atualizar os valores iniciais ao carregar a página
+    updateValues();
+  </script>
+
+</body>
+
+</html>
