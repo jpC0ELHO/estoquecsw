@@ -1,22 +1,27 @@
 package csw.estoquecsw.dto;
 
 import jakarta.persistence.Column;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
+@Valid
 public class EstoqueDTO {
 
+    @NotBlank
     private String produto;
-
+    @NotNull
     private Integer sku;
-
+    @NotNull
     private Integer volumeQtd;
-
+    @NotNull @PositiveOrZero
     private Double valorCp;
-
+    @NotNull @PositiveOrZero
     private Double valorVd;
-
+    @NotNull @PositiveOrZero
     private Double lucroFi;
-
+    @NotBlank
     private String situacao;
 
     //Getters and setters

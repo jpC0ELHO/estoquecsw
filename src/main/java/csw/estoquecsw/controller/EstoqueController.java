@@ -9,25 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value="/estoque-csw")
+@RequestMapping(value="/estoque_csw")
 public class EstoqueController {
 
     @Autowired
     private EstoqueService estoqueService;
 
-    @GetMapping(value = "listar-todos")
+    @GetMapping(value = "listartodos")
     public List<EstoqueModel>getAllProdutos(){
         return estoqueService.findAll();
     }
@@ -35,14 +27,18 @@ public class EstoqueController {
     @PostMapping
     public ResponseEntity<Object>saveProduto(@RequestBody @Valid EstoqueDTO estoqueDTO){
 
+        var estoqueModel = new EstoqueModel();
+        BeanUtils.copyProperties(estoqueDTO, estoqueModel);
+        if (!estoqueModel.getSituacao().equalsIgnoreCase("vendido") && !estoqueModel.getSituacao().equalsIgnoreCase("em estoque")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Illegal argument, return only 'vendido' or 'em estoque'...");
+        }
+
         if(estoqueService.existsByProduto(estoqueDTO.getProduto())){
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Product already exists!");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Product already exists!");
         }
         if(estoqueService.existsBySku(estoqueDTO.getSku())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Sku already exists!");
         }
-            var estoqueModel = new EstoqueModel();
-            BeanUtils.copyProperties(estoqueDTO, estoqueModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(estoqueService.save(estoqueModel));
 
 
@@ -91,4 +87,7 @@ public class EstoqueController {
         }
 
     }
+
+
+
 }
