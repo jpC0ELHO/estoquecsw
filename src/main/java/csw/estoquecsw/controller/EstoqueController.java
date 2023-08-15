@@ -24,6 +24,18 @@ public class EstoqueController {
         return estoqueService.findAll();
     }
 
+    @GetMapping(value ="/{id}")
+    public ResponseEntity<Object> getProduto(@PathVariable(value="id") Integer id){
+
+        Optional<EstoqueModel>estoqueModelOptional=estoqueService.findByIdProduto(id);
+        if(estoqueModelOptional.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(estoqueModelOptional.get());
+        }
+
+    }
+
     @PostMapping
     public ResponseEntity<Object>saveProduto(@RequestBody @Valid EstoqueDTO estoqueDTO){
 
@@ -43,30 +55,6 @@ public class EstoqueController {
 
 
     }
-
-    @GetMapping(value ="/{id}")
-    public ResponseEntity<Object> getProduto(@PathVariable(value="id") Integer id){
-
-        Optional<EstoqueModel>estoqueModelOptional=estoqueService.findByIdProduto(id);
-        if(estoqueModelOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
-        }else{
-            return ResponseEntity.status(HttpStatus.OK).body(estoqueModelOptional.get());
-        }
-
-    }
-    @DeleteMapping(value ="/{id}")
-    public ResponseEntity<Object> deletProduto(@PathVariable(value="id") Integer id){
-
-        Optional<EstoqueModel>estoqueModelOptional=estoqueService.findByIdProduto(id);
-        if(estoqueModelOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
-        }else{
-            estoqueService.deletById(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Product deleted succesfully!");
-        }
-
-    }
     @PutMapping(value ="/{id}")
     public ResponseEntity<Object> updateProduto(@PathVariable(value="id") Integer id,@RequestBody EstoqueDTO estoqueDTO){
 
@@ -84,6 +72,18 @@ public class EstoqueController {
 
 
             return ResponseEntity.status(HttpStatus.OK).body(estoqueService.save(estoqueModel));
+        }
+
+    }
+    @DeleteMapping(value ="/{id}")
+    public ResponseEntity<Object> deletProduto(@PathVariable(value="id") Integer id){
+
+        Optional<EstoqueModel>estoqueModelOptional=estoqueService.findByIdProduto(id);
+        if(estoqueModelOptional.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        }else{
+            estoqueService.deletById(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Product deleted succesfully!");
         }
 
     }
