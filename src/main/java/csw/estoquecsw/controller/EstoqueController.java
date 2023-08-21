@@ -51,6 +51,7 @@ public class EstoqueController {
         if(estoqueService.existsBySku(estoqueDTO.getSku())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Sku already exists!");
         }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(estoqueService.save(estoqueModel));
 
 

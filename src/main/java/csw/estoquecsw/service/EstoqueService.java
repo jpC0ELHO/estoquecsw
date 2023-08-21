@@ -2,12 +2,13 @@ package csw.estoquecsw.service;
 
 import csw.estoquecsw.model.EstoqueModel;
 import csw.estoquecsw.repository.EstoqueRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -24,7 +25,8 @@ public class EstoqueService {
             String situacao=estoqueModel.getSituacao().toLowerCase();
             double result;
 
-            //Tratado com exceções...
+
+        //Tratado com exceções...
         try{
 
             if(situacao.equals("vendido")){
@@ -48,6 +50,13 @@ public class EstoqueService {
             estoqueModel.setValorCp2(num1);
             Double num2=estoqueModel.getValorVd()*estoqueModel.getVolumeQtd();
             estoqueModel.setValorVd2(num2);
+        }
+        try{
+            if(estoqueModel.getData()!=null){
+                return estoqueRepository.save(estoqueModel);
+            }
+        }catch (DateTimeException e){
+            System.err.println("Invalid date..."+e);
         }
         return estoqueRepository.save(estoqueModel);
 

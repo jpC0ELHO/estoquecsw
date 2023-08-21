@@ -4,6 +4,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.sql.Date;
 
 @Valid
 public class EstoqueDTO {
@@ -22,6 +25,8 @@ public class EstoqueDTO {
     private Double lucroFi;
     @NotBlank
     private String situacao;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date data;
 
     //Getters and setters
 
@@ -80,5 +85,13 @@ public class EstoqueDTO {
 
     public void setSituacao(String situacao) {
         this.situacao = situacao;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
     }
 }
