@@ -26,7 +26,6 @@ public class EstoqueController {
 
     @GetMapping(value ="/{id}")
     public ResponseEntity<Object> getProduto(@PathVariable(value="id") Integer id){
-
         Optional<EstoqueModel>estoqueModelOptional=estoqueService.findByIdProduto(id);
         if(estoqueModelOptional.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
@@ -38,47 +37,33 @@ public class EstoqueController {
 
     @PostMapping
     public ResponseEntity<Object>saveProduto(@RequestBody @Valid EstoqueDTO estoqueDTO){
-
         var estoqueModel = new EstoqueModel();
         BeanUtils.copyProperties(estoqueDTO, estoqueModel);
         if (!estoqueModel.getSituacao().equalsIgnoreCase("vendido") && !estoqueModel.getSituacao().equalsIgnoreCase("em estoque")) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Illegal argument, return only 'vendido' or 'em estoque'...");
         }
-
         if(estoqueService.existsByProduto(estoqueDTO.getProduto())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Product already exists!");
         }
         if(estoqueService.existsBySku(estoqueDTO.getSku())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Sku already exists!");
         }
-
         return ResponseEntity.status(HttpStatus.CREATED).body(estoqueService.save(estoqueModel));
-
-
     }
-    @PutMapping(value ="/{id}")
-    public ResponseEntity<Object> updateProduto(@PathVariable(value="id") Integer id,@RequestBody EstoqueDTO estoqueDTO){
 
+    @PutMapping(value ="/{id}")
+    public ResponseEntity<Object> updateProduto(@PathVariable(value="id") Integer id){
         Optional<EstoqueModel>estoqueModelOptional=estoqueService.findByIdProduto(id);
         if(estoqueModelOptional.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
         }else{
             var estoqueModel=new EstoqueModel();
-            estoqueModel.setProduto(estoqueDTO.getProduto());
-            estoqueModel.setSituacao(estoqueDTO.getSituacao());
-            estoqueModel.setVolumeQtd(estoqueDTO.getVolumeQtd());
-            estoqueModel.setValorCp(estoqueDTO.getValorCp());
-            estoqueModel.setValorVd(estoqueDTO.getValorVd());
-            estoqueModel.setSku(estoqueDTO.getSku());
-
-
             return ResponseEntity.status(HttpStatus.OK).body(estoqueService.save(estoqueModel));
         }
-
     }
+
     @DeleteMapping(value ="/{id}")
     public ResponseEntity<Object> deletProduto(@PathVariable(value="id") Integer id){
-
         Optional<EstoqueModel>estoqueModelOptional=estoqueService.findByIdProduto(id);
         if(estoqueModelOptional.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
@@ -86,9 +71,6 @@ public class EstoqueController {
             estoqueService.deletById(id);
             return ResponseEntity.status(HttpStatus.OK).body("Product deleted succesfully!");
         }
-
     }
-
-
 
 }

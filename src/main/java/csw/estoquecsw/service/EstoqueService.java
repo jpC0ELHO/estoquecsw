@@ -1,9 +1,14 @@
 package csw.estoquecsw.service;
 
+import csw.estoquecsw.dto.EstoqueDTO;
 import csw.estoquecsw.model.EstoqueModel;
 import csw.estoquecsw.repository.EstoqueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
@@ -18,6 +23,18 @@ public class EstoqueService {
 
     public List<EstoqueModel>findAll(){
         return estoqueRepository.findAll();
+    }
+
+    public EstoqueModel updateProdu(EstoqueModel estoqueModel, @RequestBody EstoqueDTO estoqueDTO){
+
+            estoqueModel.setProduto(estoqueDTO.getProduto());
+            estoqueModel.setSituacao(estoqueDTO.getSituacao());
+            estoqueModel.setVolumeQtd(estoqueDTO.getVolumeQtd());
+            estoqueModel.setValorCp(estoqueDTO.getValorCp());
+            estoqueModel.setValorVd(estoqueDTO.getValorVd());
+            estoqueModel.setSku(estoqueDTO.getSku());
+
+            return estoqueRepository.save(estoqueModel);
     }
 
 
