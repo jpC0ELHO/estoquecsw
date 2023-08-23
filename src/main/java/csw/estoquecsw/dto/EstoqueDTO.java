@@ -1,5 +1,6 @@
 package csw.estoquecsw.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,6 +8,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Valid
 public class EstoqueDTO {
@@ -21,12 +23,12 @@ public class EstoqueDTO {
     private Double valorCp;
     @NotNull @PositiveOrZero
     private Double valorVd;
-    @NotNull @PositiveOrZero
-    private Double lucroFi;
     @NotBlank
     private String situacao;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date data;
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime dataPostada;
 
     //Getters and setters
 
@@ -69,14 +71,6 @@ public class EstoqueDTO {
 
     public void setValorVd(Double valorVd) {
         this.valorVd = valorVd;
-    }
-
-    public Double getLucroFi() {
-        return lucroFi;
-    }
-
-    public void setLucroFi(Double lucroFi) {
-        this.lucroFi = lucroFi;
     }
 
     public String getSituacao() {

@@ -36,11 +36,13 @@ public class EstoqueModel {
     private String situacao;
     @Column
     private Date data;
+    @Column
+    private LocalDateTime dataPostada;
 
     //Essas variaveis devem receber os valores devidos e retornar em forma de tabela ou grafico.
-    private Double gastoTtl;
-    private Double lucroBt;
-    private Double lucroLc;
+//    private Double gastoTtl;
+//    private Double lucroBt;
+//    private Double lucroLc;
 
     //Constructor
 
@@ -137,5 +139,13 @@ public class EstoqueModel {
 
     public void setData(Date data) {
         this.data = data;
+    }
+
+    public LocalDateTime getDataPostada() {
+        return dataPostada;
+    }
+
+    public void setDataPostada(LocalDateTime dataPostada) {
+        this.dataPostada = dataPostada;
     }
 }

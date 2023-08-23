@@ -7,24 +7,25 @@ import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value="/estoque_csw")
+@RequestMapping(value="/api/estoque/cv")
 public class EstoqueController {
 
     @Autowired
     private EstoqueService estoqueService;
 
-    @GetMapping(value = "listartodos")
+    @GetMapping(value = "listarpd",produces = MediaType.APPLICATION_JSON_VALUE)
     public List<EstoqueModel>getAllProdutos(){
         return estoqueService.findAll();
     }
 
-    @GetMapping(value ="/{id}")
+    @GetMapping(value ="/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getProduto(@PathVariable(value="id") Integer id){
         Optional<EstoqueModel>estoqueModelOptional=estoqueService.findByIdProduto(id);
         if(estoqueModelOptional.isEmpty()){
@@ -35,34 +36,39 @@ public class EstoqueController {
 
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object>saveProduto(@RequestBody @Valid EstoqueDTO estoqueDTO){
         var estoqueModel = new EstoqueModel();
         BeanUtils.copyProperties(estoqueDTO, estoqueModel);
         if (!estoqueModel.getSituacao().equalsIgnoreCase("vendido") && !estoqueModel.getSituacao().equalsIgnoreCase("em estoque")) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Illegal argument, return only 'vendido' or 'em estoque'...");
         }
-        if(estoqueService.existsByProduto(estoqueDTO.getProduto())){
+        else if(estoqueService.existsByProduto(estoqueDTO.getProduto())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Product already exists!");
         }
-        if(estoqueService.existsBySku(estoqueDTO.getSku())){
+        else if(estoqueService.existsBySku(estoqueDTO.getSku())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Sku already exists!");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(estoqueService.save(estoqueModel));
     }
 
-    @PutMapping(value ="/{id}")
-    public ResponseEntity<Object> updateProduto(@PathVariable(value="id") Integer id){
+    @PutMapping(value ="/{id}",consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Object> updateProduto(@PathVariable(value="id") Integer id, @RequestBody @Valid EstoqueDTO estoqueDTO){
         Optional<EstoqueModel>estoqueModelOptional=estoqueService.findByIdProduto(id);
+        var estoqueModel = new EstoqueModel();
         if(estoqueModelOptional.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
         }else{
-            var estoqueModel=new EstoqueModel();
-            return ResponseEntity.status(HttpStatus.OK).body(estoqueService.save(estoqueModel));
+            return ResponseEntity.status(HttpStatus.OK).body(estoqueService.updateProdu(estoqueModel,estoqueDTO));
         }
     }
 
-    @DeleteMapping(value ="/{id}")
+    @DeleteMapping(value ="/{id}",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Object> deletProduto(@PathVariable(value="id") Integer id){
         Optional<EstoqueModel>estoqueModelOptional=estoqueService.findByIdProduto(id);
         if(estoqueModelOptional.isEmpty()){

@@ -3,6 +3,7 @@ package csw.estoquecsw.service;
 import csw.estoquecsw.dto.EstoqueDTO;
 import csw.estoquecsw.model.EstoqueModel;
 import csw.estoquecsw.repository.EstoqueRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,14 @@ public class EstoqueService {
     @Autowired
     private EstoqueRepository estoqueRepository;
 
+
+
     public List<EstoqueModel>findAll(){
         return estoqueRepository.findAll();
     }
 
     public EstoqueModel updateProdu(EstoqueModel estoqueModel, @RequestBody EstoqueDTO estoqueDTO){
-
+            BeanUtils.copyProperties(estoqueModel,estoqueDTO);
             estoqueModel.setProduto(estoqueDTO.getProduto());
             estoqueModel.setSituacao(estoqueDTO.getSituacao());
             estoqueModel.setVolumeQtd(estoqueDTO.getVolumeQtd());
@@ -62,19 +65,13 @@ public class EstoqueService {
             System.err.println("Situação errada: "+e+situacao);
                     return new EstoqueModel();
         }
-        if(estoqueModel.getVolumeQtd()>=2||estoqueModel.getVolumeQtd()<=10){
+        if(estoqueModel.getVolumeQtd()>=2 && estoqueModel.getVolumeQtd()<=10){
             Double num1= estoqueModel.getValorCp()*estoqueModel.getVolumeQtd();
             estoqueModel.setValorCp2(num1);
             Double num2=estoqueModel.getValorVd()*estoqueModel.getVolumeQtd();
             estoqueModel.setValorVd2(num2);
         }
-        try{
-            if(estoqueModel.getData()!=null){
-                return estoqueRepository.save(estoqueModel);
-            }
-        }catch (DateTimeException e){
-            System.err.println("Invalid date..."+e);
-        }
+
         return estoqueRepository.save(estoqueModel);
 
     }
